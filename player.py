@@ -51,22 +51,22 @@ class Player:
 class Ranger(Player):
 
     def __init__(self, x, y, name):
-        super(Ranger, self).__init__(x, y, "Ranger")
+        super(Ranger, self).__init__(x, y, "Ranger", name)
 
 class Thief(Player):
 
     def __init__(self, x, y, name):
-        super(Thief, self).__init__(x, y, "Thief")
+        super(Thief, self).__init__(x, y, "Thief", name)
 
 class Sorcerer(Player):
 
     def __init__(self, x, y, name):
-        super(Sorcerer, self).__init__(x, y, "Sorcerer")
+        super(Sorcerer, self).__init__(x, y, "Sorcerer", name)
 
 class Paladin(Player):
 
     def __init__(self, x, y, name):
-        super(Paladin, self).__init__(x, y, "Paladin")
+        super(Paladin, self).__init__(x, y, "Paladin", name)
 
-#p = Paladin(1,1)
-#print(p.health)
+#p = Paladin(1,1, "Rimmer")
+#print(str(p.health) + " " + p.name)
