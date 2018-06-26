@@ -1,0 +1,71 @@
+Game description for Dungeon Keep
+
+At the start of the game the Player shall be able to choose from 4 Characters:
+- Ranger
+- Paladin
+- Thief
+- Sorcerer
+
+There shall be different types of monster that the Player can encounter:
+- Skeleton
+- Goblin
+- Dark Elf
+- Dragon (boss)
+
+Each Player (and Monster) character shall have unique 'stats' for fighting and
+traversing obstacles:
+- Attack
+- Defence
+- Agility
+- Health
+
+The player will enter Dungeon Keep and will not know anything of the current
+layout of the Dungeon. The Dungeon layout (map) shall be loaded from a file.
+The map shall contain different types of rooms:
+- Empty Room
+- Secret Room
+- Monster Room
+- Trap Room
+- Map Room
+- Boss Room
+- Obstacle Room
+
+In each room the Player shall have an option of certain
+actions:
+All Rooms:
+- Rest
+  - Shall restore some health
+  - Shall bring risk of being attacked
+- Show
+  - Map (if available)
+    - Map shall show where Player has been and not been.
+  - Health
+  - Items
+Empty Room, Secret Room:
+- Search
+Monster Room:
+- Fight
+- Flee (go back to previous room)
+- Avoid (go to any room - harder than fleeing)
+Boss Room:
+- Fight
+- Flee
+Obstacle Room:
+- Traverse
+
+The rooms shall (depending on map layout) doors in directions:
+- North
+- South
+- East
+- West
+Only available options for any given room shall be displayed.
+
+There shall be a number of items that a Player can find and use:
+- Health drink (restores some Health)
+- Mjolnir (legendary hammer, requires strength)
+- Elder Wand (Only usable by a Sorcerer)
+- Map (Gives Player the ability to see Dungeon Map)
+- Cloak of Mobility (increases agility)
+- Strength potion (increases strength)
+- Rope (can skip an obstacle room)
+- Boss Key (to enter Boss Room)
