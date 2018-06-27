@@ -29,6 +29,9 @@ The map shall contain different types of rooms:
 - Map Room
 - Boss Room
 - Obstacle Room
+- Small Key Room
+- Boss Key Room
+- Locked Room
 
 In each room the Player shall have an option of certain
 actions:
@@ -62,10 +65,19 @@ Only available options for any given room shall be displayed.
 
 There shall be a number of items that a Player can find and use:
 - Health drink (restores some Health)
-- Mjolnir (legendary hammer, requires strength)
-- Elder Wand (Only usable by a Sorcerer)
-- Map (Gives Player the ability to see Dungeon Map)
-- Cloak of Mobility (increases agility)
 - Strength potion (increases strength)
 - Rope (can skip an obstacle room)
+
+Can only be found in Map Room:
+- Map (Gives Player the ability to see Dungeon Map)
+
+Can only be found in Secret room and need to solve riddle to get:
+- Mjolnir (legendary hammer, requires strength)
+- Elder Wand (Only usable by a Sorcerer)
+- Cloak of Mobility (increases agility)
+
+Can only be found in Boss Key Room
 - Boss Key (to enter Boss Room)
+
+Can only be found in small Key Room
+- Small Key (to open Locked Rooms)
