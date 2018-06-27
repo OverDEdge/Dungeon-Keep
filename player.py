@@ -5,15 +5,15 @@ Health, Attack, Defence and Agility stats which help in monster encounters
 """
 
 # The stats are defined in the dictionary STATS where:
-# - STATS[0] = Health
-# - STATS[1] = Attack
-# - STATS[2] = Defence
-# - STATS[3] = Agility
-STATS = {
+# - PLAYER_STATS[0] = Health
+# - PLAYER_STATS[1] = Attack
+# - PLAYER_STATS[2] = Defence
+# - PLAYER_STATS[3] = Agility
+PLAYER_STATS = {
 "Paladin": [100, 20, 15, 5],
 "Ranger": [70, 15, 10, 15],
 "Thief": [60, 10, 10, 20],
-"Sorcerer": [70, 15, 10, 10]
+"Sorcerer": [75, 15, 10, 10]
 }
 
 # Player is Super class which have the common elements of each character type.
@@ -28,15 +28,15 @@ STATS = {
 class Player:
 
     def __init__(self, x, y, type = "Paladin", name = "Link"):
-        self.health = STATS[type][0]
-        self.attack = STATS[type][1]
-        self.defence = STATS[type][2]
-        self.agility = STATS[type][3]
+        self.health = PLAYER_STATS[type][0]
+        self.attack = PLAYER_STATS[type][1]
+        self.defence = PLAYER_STATS[type][2]
+        self.agility = PLAYER_STATS[type][3]
         self.position = (x, y)
         self.items = []
         self.type = type
         self.locations = [(x, y)]
-        self.prev_pos = None
+        self.prev_pos = (x, y)
         self.name = name
 
     # When player position is updated the position and locations variables
