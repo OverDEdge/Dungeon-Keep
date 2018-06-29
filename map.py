@@ -33,7 +33,18 @@ List of possible rooms:
 'P' = PlayerRoom() (Player start position)
 """
 
-from rooms import *
+from bossroom import *
+from bosskeyroom import *
+from emptyroom import *
+from exitroom import *
+from lockedroom import *
+from maproom import *
+from monsterroom import *
+from obstacleroom import *
+from playerroom import *
+from secretroom import *
+from smallkeyroom import *
+from traproom import *
 
 # Anonymous 'Constant' that take x as input to initialize the rooms
 POSSIBLE_ROOMS = lambda x: {
@@ -68,10 +79,12 @@ class Map():
         # Array of Room Objects where walls are None
         #self.map_rooms = np.empty([self.tileheight, self.tilewidth],
         #                            dtype = 'str')
-        self.map_rooms = []
+        #self.map_rooms = []
         # Array of map data to be accesible by player after getting map.
         self.map_data = np.empty([self.tileheight, self.tilewidth],
                                     dtype = 'str')
+        self.map_rooms = np.empty([self.tileheight, self.tilewidth],
+                                    dtype = 'object')
 
         # Row becomes the y direction and col becomes the x direction. Where:
         # Decreasing y = 'North', Increasing y = 'South'
@@ -93,18 +106,19 @@ class Map():
                 # No point in calculating possible paths for walls
                 # since they will be None objects and Exit will initiate
                 # end of game
-                if tile != '-' and tile != 'E':
+                if tile != '-':
                     pos_dir = self.possible_directions(row, col, pos_dir)
                 else:
                     pass
                 # Initialize correct rooms
-                self.map_rooms.append(POSSIBLE_ROOMS(pos_dir)[tile])
+                self.map_rooms[row][col] = POSSIBLE_ROOMS(pos_dir)[tile]
+                #self.map_rooms.append(POSSIBLE_ROOMS(pos_dir)[tile])
                 #if POSSIBLE_ROOMS(pos_dir)[tile]:
                     #print(POSSIBLE_ROOMS(pos_dir)[tile].item)
 
-        print(self.map_data)
-        print("Tilewidth:", self.tilewidth)
-        print("Tileheight:", self.tileheight)
+        #print(self.map_data)
+        #print("Tilewidth:", self.tilewidth)
+        #print("Tileheight:", self.tileheight)
         # Player Room on Normal map
         #print(self.map_rooms[7*self.tilewidth + 5])
 
