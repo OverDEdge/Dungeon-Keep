@@ -20,11 +20,11 @@ class ObstacleRoom(Room):
         # Save current position to check after asking for action
         old_pos = player.position
         player =  super(ObstacleRoom, self).enter(player, OR_ACTIONS_PRE, OR_ACTIONS_PRE_MESSAGE,
-                    ['traverse obstacle', 'swing rope', 'go back'])
+                    ['traverse obstacle', 'use rope', 'go back'])
 
         # If position has changed then player has chosen 'go back' and should return new player
         if old_pos == player.position:
-            return super(ObstacleRoom, self).enter(player, OR_ACTIONS_POST, OR_ACTIONS_POST_MESSAGE)
+            return super(ObstacleRoom, self).enter(player, OR_ACTIONS_POST, OR_ACTION_POST_MESSAGE)
         else:
             return player
 

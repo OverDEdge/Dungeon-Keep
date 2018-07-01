@@ -10,13 +10,13 @@ Health, Attack, Defence and Agility stats which help in monster encounters
 # - MONSTER_STATS[2] = Defence
 
 MONSTER_STATS = {
-"Skeleton": [10, 10, 5],
-"Goblin": [5, 5, 10],
-"Dark Elf": [5, 5, 5],
+"Skeleton": [20, 15, 5, 5],
+"Goblin": [15, 10, 10, 5],
+"Dark Elf": [15, 10, 5, 10],
 }
 
 BOSS_STATS = {
-"Dragon": [50, 20, 10]
+"Dragon": [50, 20, 10, 10]
 }
 
 # Monster is Super class which have the common elements of each character type.
@@ -30,6 +30,7 @@ class Monster:
         self.health = MONSTER_STATS[type][0]
         self.attack = MONSTER_STATS[type][1]
         self.defence = MONSTER_STATS[type][2]
+        self.agility = MONSTER_STATS[type][3]
         self.type = type
 
 class Skeleton(Monster):
@@ -53,4 +54,5 @@ class Dragon(Monster):
         self.health = BOSS_STATS[type][0]
         self.attack = BOSS_STATS[type][1]
         self.defence = BOSS_STATS[type][2]
+        self.agility = BOSS_STATS[type][3]
         self.type = type

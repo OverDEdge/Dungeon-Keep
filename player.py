@@ -10,10 +10,10 @@ Health, Attack, Defence and Agility stats which help in monster encounters
 # - PLAYER_STATS[2] = Defence
 # - PLAYER_STATS[3] = Agility
 PLAYER_STATS = {
-"Paladin": [100, 20, 15, 5],
+"Paladin": [100, 20, 20, 10],
 "Ranger": [70, 15, 10, 15],
 "Thief": [60, 10, 10, 20],
-"Sorcerer": [75, 15, 10, 10]
+"Sorcerer": [70, 10, 15, 15]
 }
 
 from sys import exit
@@ -36,7 +36,7 @@ class Player:
         self.agility = PLAYER_STATS[type][3]
         self.maxhealth = PLAYER_STATS[type][0]
         self.position = (x, y)
-        self.items = ['rope', 'map', 'health potion', 'strength potion']
+        self.items = ['health potion']
         self.type = type
         #self.locations = [(x, y)]
         self.prev_pos = (x, y)

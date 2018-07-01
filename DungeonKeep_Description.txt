@@ -15,8 +15,12 @@ There shall be different types of monster that the Player can encounter:
 Each Player (and Monster) character shall have unique 'stats' for fighting and
 traversing obstacles:
 - Attack
+  - How much damage you do when you hit
 - Defence
+  - How much damage you take when hit
 - Agility
+  - How easy you can get over obstacles
+  - How good you are at avoiding attacks
 - Health
 
 The player will enter Dungeon Keep and will not know anything of the current

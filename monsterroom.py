@@ -10,13 +10,14 @@ class MonsterRoom(Room):
 
     # Function that activates when Player enters room
     def enter(self, player):
+        self.monster_avoid = False
 
-        # Get previous direction of player
-        self.came_from = self.get_prev_dir(player.position, player.prev_pos)
-        # Show room description
-        super(MonsterRoom, self).describe_room(self.came_from)
         # Check if monster has been defeated or not
         if self.monster:
+            # Get previous direction of player
+            self.came_from = self.get_prev_dir(player.position, player.prev_pos)
+            # Show room description
+            super(MonsterRoom, self).describe_room(self.came_from)
             # Print appropriate monster text
             if self.monster.type == 'Skeleton':
                 print(dedent("""
@@ -37,7 +38,7 @@ class MonsterRoom(Room):
                 """))
             elif self.monster.type == 'Dark Elf':
                 print(dedent("""
-                    You quietly enter the room and quickly looking back since don't want
+                    You quietly enter the room and take a quick look back since you don't want
                     anyone sneaking up on you from behind. As you turn back around you
                     suddenly hear a high pitched screech coming from a dark corner. Out
                     strolls a small evil Looking creature with sharp teeth. Great, you
@@ -47,18 +48,31 @@ class MonsterRoom(Room):
                 print("Monster type not defined. Something has gone wrong. Exiting game.")
                 exit(1)
 
+            # Save position to check it run successful.
+            temp_pos = player.position
             # Start fight sequence
+            player = super(MonsterRoom, self).enter(player, MR_ACTIONS_PRE, MR_ACTION_PRE_MESSAGE, ['fight', 'attack', 'run', 'avoid'])
+
+            if self.monster_avoid:
+                # If player has managed to avoid the monster he can choose the exit
+                return super(MonsterRoom, self).enter(player, MR_ACTIONS_AVOID, MR_ACTION_AVOID_MESSAGE)
+            elif temp_pos != player.position:
+                # If player has sucessfully run away from monster
+                player.prev_pos = temp_pos
+                return player
+            else:
+                # Monster has been defeated and can continue exploring the room
+                print("After defeating the monster the room is clear to explore")
+                return super(MonsterRoom, self).enter(player)
         else:
             pass
 
+        print("The monster in this room has been defeated.\n")
 
+        # SInce the monster is gone continue as standard room
 
-        # If monster is gone continue as standard room
-        return super(MonsterRoom, self).enter(player)
         # Get previous direction of player
-        #came_from = self.get_prev_dir(player.position, player.prev_pos)
-        # Show room descrition
-        #self.describe_room(came_from)
-
-        # Ask for player action
-        # Keep going until action to leave room is detected
+        self.came_from = self.get_prev_dir(player.position, player.prev_pos)
+        # Show room description
+        super(MonsterRoom, self).describe_room(self.came_from)
+        return super(MonsterRoom, self).enter(player)

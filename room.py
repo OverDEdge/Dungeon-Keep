@@ -13,28 +13,38 @@ PROMPT = "\nWhat do you want to do? - > "
 ER_ACTIONS = {
 'show': act.ACTIONS_SHOW,
 'go': act.ACTIONS_GO,
+'open': act.ACTIONS_OPEN,
 'search': act.ACTIONS_SEARCH,
 'use': ['strength potion', 'health potion'],
 'rest': []
 }
 
-ER_ACTION_MESSAGE = "You can't do that here. Only standard room actions apply."
+ER_ACTION_MESSAGE = "You can't do that here. This is just an empty room."
 
 # Monster Room actions before defeating Monster
 MR_ACTIONS_PRE = {
 'show': act.ACTIONS_SHOW,
 'use': ['strength potion', 'health potion'],
 'fight': None,
+'attack': None,
 'run': None,
 'avoid': None
 }
 
 MR_ACTION_PRE_MESSAGE = "You are being attacked by a Monster. Focus on the fight!"
 
-# Monster Room actions before defeating Monster
+# Monster Room actions after defeating Monster
 MR_ACTIONS_POST = ER_ACTIONS
-
 MR_ACTION_POST_MESSAGE = ER_ACTION_MESSAGE
+
+# Monster Room actions after avoiding Monster
+MR_ACTIONS_AVOID = {
+'show': act.ACTIONS_SHOW,
+'go': act.ACTIONS_GO,
+'use': ['strength potion', 'health potion']
+}
+
+MR_ACTION_AVOID_MESSAGE = "You just avoided the monster and he is hot on your tail. You don't have time to do that, just get out of the room!"
 
 # Trap Room actions
 TR_ACTIONS = ER_ACTIONS
@@ -44,9 +54,8 @@ TR_ACTION_MESSAGE = ER_ACTION_MESSAGE
 # Obstacle Room Actions pre traversing obstacle
 OR_ACTIONS_PRE = {
 'traverse': act.ACTIONS_TRAVERSE,
-'use': ['strength potion', 'health potion'],
-'swing': ['rope'],
-'show': act.ACTIONS_SHOW,
+'use': ['strength potion', 'health potion', 'rope'],
+'show': ['map', 'item', 'name', 'type', 'action', 'stat'],
 'go': ['back']
 }
 
@@ -59,24 +68,31 @@ OR_ACTIONS_POST = {
 'use': ['strength potion', 'health potion']
 }
 
-OR_ACTIONS_POST_MESSAGE = "You can't do that here. The debris is dangerous, find an exit as soon as possible."
+OR_ACTION_POST_MESSAGE = "You can't do that here. The debris is dangerous, find an exit as soon as possible."
 
 # Boss Room actions
 BR_ACTIONS_PRE = {
 'show': act.ACTIONS_SHOW,
-'use': ['strength potion', 'health potion', 'boss key']
+'use': ['strength potion', 'health potion', 'boss key'],
+'go': ['back']
 }
 
 BR_ACTION_PRE_MESSAGE = "You can't do that here. There is a big door in front of you!!"
 
 BR_ACTIONS_POST = {
-'show': act.ACTIONS_SHOW,
+'show': ['map', 'item', 'name', 'type', 'action', 'stat'],
 'use': ['strength potion', 'health potion'],
 'fight': None,
+'attack': None,
 'run': None
 }
 
 BR_ACTION_POST_MESSAGE = "You are facing the Boss Monster of the Dungeon. Focus on the fight!"
+
+# Monster Room actions after avoiding Monster
+BR_ACTIONS_AVOID = MR_ACTIONS_AVOID
+
+BR_ACTION_AVOID_MESSAGE = MR_ACTION_AVOID_MESSAGE
 
 # Boss Key Room actions
 BKR_ACTIONS = {
@@ -97,7 +113,8 @@ SKR_ACTION_MESSAGE = ER_ACTION_MESSAGE
 
 # Locked Room actions pre-open:
 LR_ACTIONS_PRE = {
-'show': act.ACTIONS_SHOW,
+'show': ['map', 'item', 'name', 'type', 'action', 'stat'],
+'go': ['back'],
 'use': ['health potion', 'strength potion', 'small key'],
 'open': ['door']
 }
@@ -120,10 +137,10 @@ EXR_ACTION_MESSAGE = "This is the Exit Room. You can't do that here."
 
 class Room:
     DIRECTIONS = ['North', 'South', 'West', 'East']
-    EXIT_LOCATIONS = "As you enter the room you notice a passage to the "
+    EXIT_LOCATIONS = "As you entered the room you notice a passage to the "
     ITEMS = [[], 'health potion', 'strength potion', 'rope']
     P_ITEM = [0.8, 0.13, 0.05, 0.02]
-    
+
     # doors is a boolean list of possible directions in same order as 'DIRECTIONS'
     # that means: doors = [False, True, True, False] indicates possible directions
     # as 'South' and 'West'. prev_dir must be
@@ -131,8 +148,8 @@ class Room:
         # Randomly generate possible item in the room. Most likely there is nothing
         self.item = np.random.choice(self.ITEMS, 1, p = self.P_ITEM)[0]
         self.doors = doors
-        #self.prev_dir = prev_dir
         self.monster = None
+        self.monster_avoid = False
         self.obstacle = False
         self.trap = False
         self.chest = False
@@ -145,13 +162,13 @@ class Room:
         self.door_unlocked = False
         self.boss_door = False
         self.boss_door_unlocked = False
+        # Gets the possible directions based on input when creating the room.
+        self.directions = [self.DIRECTIONS[i] for i, x in enumerate(self.doors) if x]
 
     # Function that activates when Player enters room
     def enter(self, player, possible_actions = ER_ACTIONS, action_message = ER_ACTION_MESSAGE, passed_actions = ACTION_DIRECTIONS):
-        # Get previous direction of player
-        #self.came_from = self.get_prev_dir(player.position, player.prev_pos)
-        # Show room description
-        #self.describe_room(self.came_from)
+        # Gets the possible directions based on input when entering the room.
+        self.directions = [self.DIRECTIONS[i] for i, x in enumerate(self.doors) if x]
 
         action = None
 
@@ -160,6 +177,7 @@ class Room:
         while action not in passed_actions:
             # Get action
             action = input(PROMPT)
+            print('')
 
             # Interpret action and translate to standard action
             action = act.interpret_act(action)
@@ -213,8 +231,6 @@ class Room:
 
     # Function that describes a standard room. Possible (visible) exits
     def describe_room(self, came_from):
-        # Gets the possible directions based on input when creating the room.
-        self.directions = [self.DIRECTIONS[i] for i, x in enumerate(self.doors) if x]
 
         # Remove the direction Player came from, from directions
         # Since a Player will now where he came from there is no point in
@@ -228,8 +244,8 @@ class Room:
         # Print the direction the user came from (separate it from possible exits)
         # since Player will most likely want to go forward and not back.
         if came_from:
-            print("After stumbling through a dark hallway you find yourself in another a room")
-            print("You come into the room from the %s wall" % came_from)
+            print("After stumbling through a dark hallway you find yourself in another room")
+            print("You came into the room from the %s wall" % came_from)
         else:
             print("This is the starting room. Lets start exploring the dungeon!\n")
 
@@ -237,6 +253,7 @@ class Room:
         self.show_exits()
 
     def show_exits(self):
+
         if not self.directions:
             print("Seems like a dead end, the only exit is the one you came through")
         elif len(self.directions) == 1:

@@ -39,6 +39,7 @@ class TrapRoom(Room):
             else:
                 print("Trap type isn't defined. Something has gone wrong. Exiting game")
                 exit(1)
+            player.health -= self.TRAPS[self.trap[0]]
         else:
             pass
 
